@@ -1,28 +1,26 @@
 <template>
-    <div class="wrapper" @click="this.changeActiveItem(index)">
-        <div class="card" :class="{ 'rotated': boardItems[index].status > 0 }">
+    <div class="wrapper" @click="this.changeActiveItem(boardItem.flag)">
+        <div class="card" :class="{ 'rotated': boardItem.status > 0 }">
             <div class="back">
-                <div v-html="boardItems[index].svg"></div>
+                <div v-html="boardItem.svg"></div>
             </div>
             <div class="front">
-                <span>{{ index+1 }}</span>
+                <span>?</span>
             </div>
         </div>
     </div>
 </template>
 <script>
-import {inject} from 'vue'
+import { inject } from 'vue'
 export default {
     name: 'BoardItem',
     props: {
-        index: Number,
+        boardItem: Object,
     },
     setup() {
         const changeActiveItem = inject('changeActiveItem');
-        const boardItems = inject('boardItems');
-        return{
-            changeActiveItem,
-            boardItems
+        return {
+            changeActiveItem
         }
     },
 }
@@ -30,57 +28,71 @@ export default {
 
 
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+
+<style lang="less">
 .wrapper {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    background-color: #d5d5d5;
+    width: 100px;
+    height: 100px;
+    background-color: #fef6e4;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+    cursor: pointer;
 
-.card {
-    width: 300px;
-    height: 300px;
-    position: relative;
-    perspective: 1000px;
-    border: 1px solid #fff;
-}
+    .card {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        perspective: 1000px;
 
-.front,
-.back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 1s;
-    backface-visibility: hidden;
-    background-color: #fff;
-}
+        &.rotated {
+            .back {
+                transform: rotateY(360deg);
+            }
 
-.front img {
-    max-width: 100%;
-    min-width: 100%;
-    height: auto;
-}
+            .front {
+                transform: rotateY(180deg);
+            }
+        }
 
-.back {
-    transform: rotateY(180deg);
-}
 
-.card.rotated .front {
-    transform: rotateY(180deg);
-}
+        .back {
+            transform: rotateY(180deg);
+        }
 
-.card.rotated .back {
-    transform: rotateY(360deg);
+        .front,
+        .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 1s;
+            backface-visibility: hidden;
+            background-color: #fef6e4;
+        }
+
+        .front {
+            img {
+                max-width: 100%;
+                min-width: 100%;
+                height: auto;
+            }
+            span{
+                font-size: 40px;
+                font-weight: bold;
+                color: #001858;
+            }
+            &:hover{
+                background-color: #f3d2c1;
+                span{
+                    color: #fef6e4;
+                }
+            }
+        }
+    }
 }
 </style>
