@@ -35,11 +35,16 @@ export default {
     const boardItems = ref([])
     const win = ref(false);
     const reloadGame = inject('reloadGame');
+    const Status = {
+      Closed: 0,
+      Selected: 1,
+      Opened: 2,
+    };
     onMounted(() => {
       let flag = 0;
       for (let index = 0; index < 15; index++) {
         let boardObj = {
-          status: 2,
+          status: Status.Opened,
           svg: toSvg(Math.random(), 40),
           pairNumber: index
         }
@@ -49,43 +54,45 @@ export default {
         flag++;
       }
       boardItems.value = shuffleArray(boardItems.value);
+      const delayBeforeCheck = 4000;
       setTimeout(() => {
-        boardItems.value.map(item => item.status = 0);
-      }, 4000)
+        boardItems.value.map(item => item.status = Status.Closed);
+      }, delayBeforeCheck)
     })
     const changeActiveItem = (flag) => {
       const activeItem = boardItems.value.find(item => item.flag === flag);
 
-      if (activeItem.status === 2 || activeItem.status === 1) {
+      if (activeItem.status === Status.Opened || activeItem.status === Status.Selected) {
         return
       }
 
-      if (boardItems.value.filter(item => item.status === 1).length > 0) {
+      if (boardItems.value.filter(item => item.status === Status.Selected).length > 0) {
         for (let i = 0; i < boardItems.value.length; i++) {
-          if (boardItems.value[i].status === 1 && boardItems.value[i].flag != flag) {
+          if (boardItems.value[i].status === Status.Selected && boardItems.value[i].flag != flag) {
             if (boardItems.value[i].pairNumber === activeItem.pairNumber) {
-              boardItems.value[i].status = 2;
-              activeItem.status = 2;
+              boardItems.value[i].status = Status.Opened;
+              activeItem.status = Status.Opened;
             }
             else {
-              activeItem.status = 1;
+              activeItem.status = Status.Selected;
+              const delayBeforeHide = 800;
               setTimeout(() => {
-                boardItems.value[i].status = 0;
-                activeItem.status = 0;
-              }, 800)
+                boardItems.value[i].status = Status.Closed;
+                activeItem.status = Status.Closed;
+              }, delayBeforeHide)
             }
           }
 
         }
       }
       else {
-        activeItem.status = 1;
+        activeItem.status = Status.Selected;
       }
       checkWin();
     }
 
     const checkWin = () => {
-      if (!boardItems.value.find(item => item.status === 0 || item.status === 1)) {
+      if (!boardItems.value.find(item => item.status === Status.Closed || item.status === Status.Selected)) {
         win.value = true;
       }
     }
