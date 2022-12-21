@@ -5,7 +5,7 @@
                 <div v-html="boardItem.svg"></div>
             </div>
             <div class="front">
-                <span>{{ boardItem.pairNumber }}</span>
+                <span>?</span>
             </div>
         </div>
     </div>
