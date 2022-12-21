@@ -5,7 +5,7 @@
                 <div v-html="boardItem.svg"></div>
             </div>
             <div class="front">
-                <span>?</span>
+                <span>{{ boardItem.pairNumber }}</span>
             </div>
         </div>
     </div>
@@ -21,6 +21,7 @@ export default {
         const changeActiveItem = inject('changeActiveItem');
         return {
             changeActiveItem
+
         }
     },
 }
